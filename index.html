@@ -8,63 +8,88 @@
 <title>Bezel test page</title>
 <link rel="canonical" href="https://test.bezel.qcqm.com/">
 <style>
+/* Edge tokens. Text on light: ink 17.5:1, muted 7.3:1, teal text 5.5:1, amber text 5.9:1. Dark: all 8:1 or better. */
 :root{
   --bg:#F5F6F8; --fg:#0E1116; --muted:#4A5260; --card:#FFFFFF; --line:#D9DCE2;
   --teal:#0A7165; --amber:#8A5A00;
+  --band-teal:#0E9C90; --band-purple:#A855F7; --band-ink:#0E1116;
+  --rounded:ui-rounded,"SF Pro Rounded",-apple-system,system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){
   :root{
     --bg:#0E1116; --fg:#F5F6F8; --muted:#A9B0BC; --card:#171B22; --line:#2A303A;
     --teal:#2DD4BF; --amber:#F5B544;
+    --band-teal:#2DD4BF; --band-purple:#A855F7; --band-ink:#0E1116;
   }
 }
-html{background:var(--bg)}
-/* -apple-system-body follows the iPhone's Dynamic Type setting; sizes below are rem so they scale with it. */
-html{font:-apple-system-body;-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font-size:1rem;line-height:1.45}
-main,.more{padding:16px;max-width:calc(100vw - 32px)}
-h1{font-size:1.5rem;font-weight:600;margin:8px 0 4px}
+html{background:var(--bg);font-size:17px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:1rem/1.5 -apple-system,system-ui,sans-serif}
+main,.more,footer{padding:0 16px;max-width:calc(100vw - 32px)}
+header{display:flex;align-items:center;gap:10px;padding:max(16px,env(safe-area-inset-top)) 16px 0}
+header svg{width:36px;height:36px;flex:none;color:var(--fg)}
+header .word{font:600 1.5rem/1 var(--rounded);letter-spacing:-.01em}
+h1{font:600 1.75rem/1.2 var(--rounded);letter-spacing:-.01em;margin:20px 0 8px}
+h2{font:600 1.0625rem/1.3 var(--rounded);margin:24px 0 4px}
 p{margin:8px 0;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0;display:flex;gap:12px;align-items:flex-start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:20px 0 16px;display:flex;gap:14px;align-items:flex-start}
 .card svg{flex:none;width:32px;height:32px;color:var(--muted)}
-.card strong{display:block;font:600 1.125rem/1.3 ui-rounded,-apple-system,sans-serif;color:var(--fg)}
+.card strong{display:block;font:600 1.25rem/1.25 var(--rounded);color:var(--fg);margin-bottom:2px}
 .card span{color:var(--muted)}
 .icon,.label{display:none}
 html:not([data-state]) .wait,
 html[data-state="on"] .on,
 html[data-state="off"] .off,
 html[data-state="missing"] .missing{display:block}
-html[data-state="on"] .card{border-color:var(--teal);box-shadow:inset 4px 0 0 var(--teal)}
+html[data-state="on"] .card{border-color:var(--teal);box-shadow:inset 0 0 0 1px var(--teal)}
 html[data-state="on"] .icon.on{color:var(--teal)}
-html[data-state="missing"] .card{border-color:var(--amber);box-shadow:inset 4px 0 0 var(--amber)}
+html[data-state="missing"] .card{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
 html[data-state="missing"] .icon.missing{color:var(--amber)}
 ol{margin:8px 0 0;padding-left:20px;color:var(--muted)}
 
 /*
   Band check. This page never widens itself; the Bezel extension does.
-  The band is width:100% of <body>. Without Bezel, body is exactly 100vw,
-  so the gradient's purple stop (100vw -> end) has zero width and nothing
-  overflows (no horizontal scroll). When Bezel widens html/body to
-  calc(100vw + 84px), the band grows with it and the extra 84px at the
-  right paints purple, proving the layout really extends under Safari's
-  toolbar. Teal = normal web area, white line = web-area edge (100vw).
+  The band is width:100% of <body>. Without Bezel, body is exactly 100vw, so the
+  gradient's purple stop (100vw -> end) has zero width and nothing overflows
+  (no horizontal scroll). When Bezel widens html/body to calc(100vw + 84px), the
+  band grows with it and the extra 84px at the right paints purple, proving the
+  layout really extends under Safari's toolbar. Teal = normal web area; the white
+  line (ink-edged so it shows on light) = the usual edge (100vw).
 */
-.band{height:56px;margin:12px 0;
-  background:linear-gradient(90deg,#2DD4BF 0 calc(100vw - 2px),#fff calc(100vw - 2px) 100vw,#A855F7 100vw)}
-.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.875rem;color:var(--muted)}
-.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+.bands{margin:20px 0 12px}
+.band{height:56px;border-radius:0;
+  background:linear-gradient(90deg,var(--band-teal) 0 calc(100vw - 4px),var(--band-ink) calc(100vw - 4px) calc(100vw - 3px),#fff calc(100vw - 3px) calc(100vw - 1px),var(--band-ink) calc(100vw - 1px) 100vw,var(--band-purple) 100vw)}
+.legend{display:grid;gap:8px;font-size:.9375rem;color:var(--muted);margin:0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:10px;vertical-align:-2px;border:1px solid var(--band-ink)}
+.legend .b-teal{background:var(--band-teal)}.legend .b-edge{background:#fff}.legend .b-purple{background:var(--band-purple)}
+@media (prefers-color-scheme:dark){.legend i{border-color:var(--muted)}}
+footer{display:flex;align-items:center;gap:12px;padding-top:32px;padding-bottom:max(40px,env(safe-area-inset-bottom));color:var(--muted)}
+footer .by{font-size:1.0625rem}
+/* QCQM tile: >= 1/4 tile of clear space (10 px at 40 px) on every side. */
+footer .qcqm{width:40px;height:40px;flex:none;margin:10px 0}
+.tile-dark{display:none}
+@media (prefers-color-scheme:dark){.tile-light{display:none}.tile-dark{display:block}}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .2s,box-shadow .2s}}
 </style>
 </head>
 <body>
+<header>
+  <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M60 20H30A15 15 0 0 0 15 35V65A15 15 0 0 0 30 80H60" fill="none" stroke="currentColor" stroke-opacity=".92" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="33" y="44.25" width="60" height="11.5" rx="5.75" fill="#2DD4BF"/></svg>
+  <span class="word">Bezel</span>
+</header>
 <main>
-  <h1>Bezel test page</h1>
+  <h1>Test page</h1>
   <p>This page checks whether the Bezel Safari extension is widening pages under Safari's toolbar.</p>
 
   <div class="card" role="status" aria-live="polite">
+
     <svg class="icon wait" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="16" r="12"/><path d="M16 9v7l4 3"/></svg>
+
     <svg class="icon on" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="16" r="12"/><path d="M10 16.5l4 4 8-9"/></svg>
+
     <svg class="icon off" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="16" r="12"/><path d="M10 16h12"/></svg>
+
     <svg class="icon missing" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4L29 27H3z"/><path d="M16 13v7M16 23.5v.5"/></svg>
+
     <div>
       <div class="label wait"><strong>Waiting for Bezel…</strong><span>This takes a moment.</span></div>
       <div class="label on"><strong>Bezel is working</strong><span>This page was widened under Safari's toolbar.</span></div>
@@ -76,18 +101,25 @@ ol{margin:8px 0 0;padding-left:20px;color:var(--muted)}
     </div>
   </div>
 
-  <div class="legend">
-    <span><i style="background:#2DD4BF"></i>Teal: normal page</span>
-    <span><i style="background:#fff"></i>White line: usual edge</span>
-    <span><i style="background:#A855F7"></i>Purple: widened by Bezel</span>
-  </div>
+  <h2>Width check</h2>
 </main>
-<div class="band" aria-hidden="true"></div>
-<div class="band" aria-hidden="true"></div>
+<div class="bands" aria-hidden="true"><div class="band"></div></div>
+<main>
+  <ul class="legend">
+    <li><i class="b-teal"></i>Teal: normal page</li>
+    <li><i class="b-edge"></i>White line: usual edge</li>
+    <li><i class="b-purple"></i>Purple: widened by Bezel</li>
+  </ul>
+</main>
 <div class="more">
   <p>Purple at the right of the white line means Bezel is working. No purple means the page is its normal width.</p>
   <p>This page loads nothing else and collects nothing. It only shows whether the Bezel Safari extension is active.</p>
 </div>
+<footer>
+  <span class="by">Bezel by</span>
+  <svg class="qcqm tile-light" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="qcqm"><title>qcqm</title><rect width="512" height="512" rx="115" fill="#0F1012"/><g fill="none" stroke="#F4F4F0" stroke-width="26" stroke-linecap="butt" stroke-linejoin="round"><rect x="130" y="116" width="84" height="104" rx="36"/><path d="M180 190 L222 240"/></g><path d="M382 152 A36 36 0 0 0 346 116 H334 A36 36 0 0 0 298 152 V184 A36 36 0 0 0 334 220 H346 A36 36 0 0 0 382 184" fill="none" stroke="#9A9EA6" stroke-width="18" stroke-linecap="butt" stroke-linejoin="round"/><path d="M130 405 V292 L172 354 L214 292 V405" fill="none" stroke="#9A9EA6" stroke-width="18" stroke-linecap="butt" stroke-linejoin="round"/><path d="M310 304 L374 344 L310 384" fill="none" stroke="#2EDACB" stroke-width="20" stroke-linecap="butt" stroke-linejoin="round"/></svg>
+  <svg class="qcqm tile-dark" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="qcqm"><title>qcqm</title><rect width="512" height="512" rx="115" fill="#F4F4F0"/><g fill="none" stroke="#0F1012" stroke-width="26" stroke-linecap="butt" stroke-linejoin="round"><rect x="130" y="116" width="84" height="104" rx="36"/><path d="M180 190 L222 240"/></g><path d="M382 152 A36 36 0 0 0 346 116 H334 A36 36 0 0 0 298 152 V184 A36 36 0 0 0 334 220 H346 A36 36 0 0 0 382 184" fill="none" stroke="#5E636B" stroke-width="18" stroke-linecap="butt" stroke-linejoin="round"/><path d="M130 405 V292 L172 354 L214 292 V405" fill="none" stroke="#5E636B" stroke-width="18" stroke-linecap="butt" stroke-linejoin="round"/><path d="M310 304 L374 344 L310 384" fill="none" stroke="#0E9C90" stroke-width="20" stroke-linecap="butt" stroke-linejoin="round"/></svg>
+</footer>
 <script>
 (function(){
   var d=document.documentElement,done=0;
